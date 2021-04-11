@@ -2,6 +2,7 @@ require("dotenv").config();
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 const cTable = require("console.table");
+var figlet = require("figlet");
 
 const connection = mysql.createConnection({
   host: process.env.MySQL_HOST,
@@ -19,5 +20,21 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
   if (err) throw err;
-  console.log("Connected!!!");
+
+  figlet("Employee", function (err, data) {
+    if (err) {
+      console.log("Something went wrong...");
+      console.dir(err);
+      return;
+    }
+    console.log(data);
+  });
+  figlet("Manager", function (err, data) {
+    if (err) {
+      console.log("Something went wrong...");
+      console.dir(err);
+      return;
+    }
+    console.log(data);
+  });
 });
