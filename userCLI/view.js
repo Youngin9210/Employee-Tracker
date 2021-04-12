@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-const LogTable = require("./logTable.js");
+const LogTable = require("./assets/logTable.js");
 const tLog = new LogTable().log;
 
 require("dotenv").config();
