@@ -3,7 +3,6 @@ const inquirer = require("inquirer");
 const mysql = require("mysql");
 var figlet = require("figlet");
 
-const UserAddQuery = require("./userCLI/add.js");
 const initApp = require("./userCLI/init.js");
 
 const connection = mysql.createConnection({
