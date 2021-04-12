@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 const UserViewQuery = require("./view.js");
 const view = new UserViewQuery();
-const UserAddQuery = require("./userCLI/add.js");
+const UserAddQuery = require("./add.js");
 const add = new UserAddQuery();
 
 class initApp {
@@ -16,13 +16,13 @@ class initApp {
             "View All Employees",
             "View All Employees By Department",
             "View All Employees By Manager",
+            "View All Roles",
+            "Add Department",
+            "Add Role",
             "Add Employee",
             "Remove Employee",
             "Update Employee Role",
             "Update Employee Manager",
-            "View All Roles",
-            "Add Role",
-            "Remove Role",
           ],
         },
       ])
@@ -34,6 +34,12 @@ class initApp {
             break;
           case "View All Employees By Department":
             view.viewDepartment();
+            break;
+          case "View All Employees By Manager":
+            view.viewManager();
+            break;
+          case "View All Roles":
+            view.viewRoles();
             break;
         }
       });
