@@ -50,6 +50,13 @@ class UserViewQuery {
         });
     });
   }
+
+  viewEmployees() {
+    let employees = "SELECT * FROM employee";
+    connection.query(employees, (err, res) => {
+      tLog(res);
+    });
+  }
 }
 
 module.exports = UserViewQuery;
