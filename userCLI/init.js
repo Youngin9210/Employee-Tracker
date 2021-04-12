@@ -41,6 +41,9 @@ class initApp {
           case "View All Roles":
             view.viewRoles();
             break;
+          case "Add Department":
+            add.addDepartment();
+            break;
         }
       });
   }
