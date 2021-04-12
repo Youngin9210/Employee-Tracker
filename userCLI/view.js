@@ -57,6 +57,43 @@ class UserViewQuery {
       tLog(res);
     });
   }
+
+  viewRoles() {
+    let roles = "SELECT * FROM role";
+    connection.query(roles, (err, res) => {
+      tLog(res);
+    });
+  }
+
+  viewManager() {
+    let managers =
+      "SELECT id, first_name, last_name FROM employeeTracker_DB.employee WHERE manager_id IS NULL";
+    let managerList = [];
+    connection.query(managers, (err, res) => {
+      res.forEach(({ id }, i) => {
+        managerList.push(id);
+        i++;
+      });
+      tLog(res);
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "manager",
+            message: "What is the ID of the manager you like to view?",
+            choices: managerList,
+          },
+        ])
+        .then((answer) => {
+          const { manager } = answer;
+
+          let employees = `SELECT e.id, e.first_name, e.last_name, r.title AS role, r.salary, d.name AS department FROM employee e JOIN role r	ON e.role_id = r.id JOIN department d ON r.department_id = d.id WHERE e.manager_id = ${manager}`;
+          connection.query(employees, (err, res) => {
+            tLog(res);
+          });
+        });
+    });
+  }
 }
 
 module.exports = UserViewQuery;
