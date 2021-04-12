@@ -38,6 +38,36 @@ class UserAddQuery {
         console.log(newRole);
       });
   }
+
+  addEmployee() {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "newFirst",
+          message: "What is the first name of the new employee?",
+          validate: (newFirst) => {
+            return newFirst
+              ? true
+              : console.log("Please input the first name of the new employee.");
+          },
+        },
+        {
+          type: "input",
+          name: "newLast",
+          message: "What is the first name of the new employee?",
+          validate: (newLast) => {
+            return newLast
+              ? true
+              : console.log("Please input the first name of the new employee.");
+          },
+        },
+      ])
+      .then((data) => {
+        const { newFirst, newLast } = data;
+        console.log(newFirst, newLast);
+      });
+  }
 }
 
 module.exports = UserAddQuery;
