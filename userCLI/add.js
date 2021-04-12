@@ -16,7 +16,26 @@ class UserAddQuery {
         },
       ])
       .then((data) => {
-        console.log(data.newDepartment);
+        const { newDepartment } = data;
+        console.log(newDepartment);
+      });
+  }
+
+  addRole() {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "newRole",
+          message: "What role would you like to add?",
+          validate: (newRole) => {
+            return newRole ? true : console.log("Please input a new role.");
+          },
+        },
+      ])
+      .then((data) => {
+        const { newRole } = data;
+        console.log(newRole);
       });
   }
 }
