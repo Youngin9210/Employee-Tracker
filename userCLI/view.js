@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
-const cTable = require("console.table");
+const LogTable = require("./logTable.js");
+const tLog = new LogTable().log;
 
 require("dotenv").config();
 
@@ -18,10 +19,6 @@ const connection = mysql.createConnection({
   password: process.env.MySQL_PASS,
   database: process.env.MySQL_DB,
 });
-const logTable = (x) => {
-  const table = cTable.getTable(x);
-  console.log(table);
-};
 
 class UserViewQuery {
   viewDepartment() {
@@ -48,7 +45,7 @@ class UserViewQuery {
           console.log(deptEmployees);
           let employees = [];
           connection.query(deptEmployees, (err, res) => {
-            logTable(res);
+            tLog(res);
           });
         });
     });
