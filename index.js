@@ -4,6 +4,9 @@ const mysql = require("mysql");
 const cTable = require("console.table");
 var figlet = require("figlet");
 
+const UserAddQuery = require("./userCLI/add.js");
+const initApp = require("./userCLI/init.js");
+
 const connection = mysql.createConnection({
   host: process.env.MySQL_HOST,
 
@@ -18,17 +21,14 @@ const connection = mysql.createConnection({
   database: process.env.MySQL_DB,
 });
 
-connection.connect((err) => {
-  if (err) throw err;
+figlet("Employee", function (err, data) {
+  if (err) {
+    console.log("Something went wrong...");
+    console.dir(err);
+    return;
+  }
+  console.log(data);
 
-  figlet("Employee", function (err, data) {
-    if (err) {
-      console.log("Something went wrong...");
-      console.dir(err);
-      return;
-    }
-    console.log(data);
-  });
   figlet("Manager", function (err, data) {
     if (err) {
       console.log("Something went wrong...");
@@ -37,4 +37,9 @@ connection.connect((err) => {
     }
     console.log(data);
   });
+});
+connection.connect((err) => {
+  if (err) throw err;
+  const app = new initApp();
+  app.init();
 });
