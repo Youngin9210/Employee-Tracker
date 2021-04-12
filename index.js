@@ -1,7 +1,6 @@
 require("dotenv").config();
 const inquirer = require("inquirer");
 const mysql = require("mysql");
-const cTable = require("console.table");
 var figlet = require("figlet");
 
 const UserAddQuery = require("./userCLI/add.js");
