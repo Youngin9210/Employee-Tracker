@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const cTable = require("console.table");
+
 require("dotenv").config();
 
 const mysql = require("mysql");
@@ -17,6 +18,10 @@ const connection = mysql.createConnection({
   password: process.env.MySQL_PASS,
   database: process.env.MySQL_DB,
 });
+const logTable = (x) => {
+  const table = cTable.getTable(x);
+  console.log(table);
+};
 
 class UserViewQuery {
   viewDepartment() {
@@ -39,7 +44,12 @@ class UserViewQuery {
         .then((answer) => {
           const { dept } = answer;
           // view employee by department
-          // let employees = `SELECT e.id, e.first_name, e.last_name, r.title AS role, r.salary, d.name AS department FROM employee e JOIN role r	ON e.role_id = r.id JOIN department d	ON r.department_id = d.id	WHERE d.name = ${dept}`;
+          let deptEmployees = `SELECT e.id, e.first_name, e.last_name, r.title AS role, r.salary, d.name AS department FROM employee e JOIN role r	ON e.role_id = r.id JOIN department d	ON r.department_id = d.id	WHERE d.name = '${dept}'`;
+          console.log(deptEmployees);
+          let employees = [];
+          connection.query(deptEmployees, (err, res) => {
+            logTable(res);
+          });
         });
     });
   }
