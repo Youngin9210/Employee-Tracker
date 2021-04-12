@@ -33,8 +33,8 @@ class UserAddQuery {
           },
         },
       ])
-      .then((data) => {
-        const { newRole } = data;
+      .then((answer) => {
+        const { newRole } = answer;
         console.log(newRole);
       });
   }
@@ -63,8 +63,8 @@ class UserAddQuery {
           },
         },
       ])
-      .then((data) => {
-        const { newFirst, newLast } = data;
+      .then((answer) => {
+        const { newFirst, newLast } = answer;
         console.log(newFirst, newLast);
       });
   }
