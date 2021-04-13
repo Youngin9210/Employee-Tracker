@@ -48,20 +48,51 @@ class UserAddQuery {
   }
 
   addRole() {
+    let departments = "SELECT * FROM department";
+    let deptList = [];
+    connection.query(departments, (err, res) => {
+      res.forEach(({ id }, i) => {
+        deptList.push(id);
+        i++;
+      });
+      console.log(deptList);
+      tLog(res);
+    });
     inquirer
       .prompt([
         {
           type: "input",
-          name: "newRole",
+          name: "role",
           message: "What role would you like to add?",
-          validate: (newRole) => {
-            return newRole ? true : console.log("Please input a new role.");
+          validate: (role) => {
+            return role ? true : console.log("Please input a new role.");
           },
+        },
+        {
+          type: "input",
+          name: "role_salary",
+          message: "What is the salary of the new role?",
+          validate: (role_salary) => {
+            return role_salary ? true : console.log("Please input a salary.");
+          },
+        },
+        {
+          type: "list",
+          name: "dept_id",
+          message:
+            "What department would you like to add this role to? (Reference department table above)",
+          choices: deptList,
         },
       ])
       .then((answer) => {
-        const { newRole } = answer;
-        console.log(newRole);
+        const { role, role_salary, dept_id } = answer;
+        let newRole = `INSERT INTO role(title, salary, department_id) VALUES('${role}', '${role_salary}', '${dept_id}')`;
+        let selectRole = "SELECT * FROM role";
+        connection.query(newRole, (err, res) => {
+          connection.query(selectRole, (err, res) => {
+            tLog(res);
+          });
+        });
       });
   }
 
