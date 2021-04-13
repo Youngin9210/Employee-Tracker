@@ -47,6 +47,9 @@ class initApp {
           case "Add Role":
             add.addRole();
             break;
+          case "Add Employee":
+            add.addEmployee();
+            break;
         }
       });
   }
