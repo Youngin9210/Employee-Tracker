@@ -3,6 +3,8 @@ const UserViewQuery = require("./view.js");
 const view = new UserViewQuery();
 const UserAddQuery = require("./add.js");
 const add = new UserAddQuery();
+const UserUpdateQuery = require("./update.js");
+const update = new UserUpdateQuery();
 
 class initApp {
   init() {
@@ -48,6 +50,9 @@ class initApp {
             add.addRole();
             break;
           case "Add Employee":
+            add.addEmployee();
+            break;
+          case "Update Employee Role":
             add.addEmployee();
             break;
         }
