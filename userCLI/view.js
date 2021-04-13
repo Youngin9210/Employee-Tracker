@@ -44,7 +44,6 @@ class UserViewQuery {
           const { dept } = answer;
           // view employee by department
           let deptEmployees = `SELECT e.id, e.first_name, e.last_name, r.title AS role, r.salary, d.name AS department FROM employee e JOIN role r	ON e.role_id = r.id JOIN department d	ON r.department_id = d.id	WHERE d.name = '${dept}'`;
-          console.log(deptEmployees);
           let employees = [];
           connection.query(deptEmployees, (err, res) => {
             console.log(
