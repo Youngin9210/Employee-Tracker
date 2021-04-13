@@ -20,9 +20,9 @@ class initApp {
             "Add Department",
             "Add Role",
             "Add Employee",
-            "Remove Employee",
             "Update Employee Role",
             "Update Employee Manager",
+            "Remove Employee",
           ],
         },
       ])
