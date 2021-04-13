@@ -1,4 +1,5 @@
 const inquirer = require("inquirer");
+const UserViewQuery = require("./view.js");
 const LogTable = require("./assets/logTable.js");
 const tLog = new LogTable().log;
 
@@ -55,7 +56,6 @@ class UserAddQuery {
         deptList.push(id);
         i++;
       });
-      console.log(deptList);
       tLog(res);
     });
     inquirer
@@ -87,9 +87,9 @@ class UserAddQuery {
       .then((answer) => {
         const { role, role_salary, dept_id } = answer;
         let newRole = `INSERT INTO role(title, salary, department_id) VALUES('${role}', '${role_salary}', '${dept_id}')`;
-        let selectRole = "SELECT * FROM role";
+        let selectRoles = "SELECT * FROM role";
         connection.query(newRole, (err, res) => {
-          connection.query(selectRole, (err, res) => {
+          connection.query(selectRoles, (err, res) => {
             tLog(res);
           });
         });
@@ -97,33 +97,80 @@ class UserAddQuery {
   }
 
   addEmployee() {
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "newFirst",
-          message: "What is the first name of the new employee?",
-          validate: (newFirst) => {
-            return newFirst
-              ? true
-              : console.log("Please input the first name of the new employee.");
-          },
-        },
-        {
-          type: "input",
-          name: "newLast",
-          message: "What is the first name of the new employee?",
-          validate: (newLast) => {
-            return newLast
-              ? true
-              : console.log("Please input the first name of the new employee.");
-          },
-        },
-      ])
-      .then((answer) => {
-        const { newFirst, newLast } = answer;
-        console.log(newFirst, newLast);
+    let roles = "SELECT * FROM role";
+    let managers =
+      "SELECT e.id, e.first_name, e.last_name, r.title AS role, d.name AS dept FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id WHERE e.manager_id IS NULL";
+    let roleList = [];
+    let managerList = ["NULL"];
+    const util = require("util");
+    const setTimeoutPromise = util.promisify(setTimeout);
+    connection.query(roles, (err, res) => {
+      res.forEach(({ id }, i) => {
+        roleList.push(id);
+        i++;
       });
+      console.log("\n================ Roles ================");
+      tLog(res);
+    });
+    connection.query(managers, (err, res) => {
+      res.forEach(({ id }, i) => {
+        managerList.push(id);
+        i++;
+      });
+      console.log("\n================ Managers ================");
+      tLog(res);
+    });
+
+    setTimeoutPromise(15).then(() => {
+      inquirer
+        .prompt([
+          {
+            type: "input",
+            name: "newFirst",
+            message: "What is the first name of the new employee?",
+            validate: (newFirst) => {
+              return newFirst
+                ? true
+                : console.log(
+                    "Please input the first name of the new employee."
+                  );
+            },
+          },
+          {
+            type: "input",
+            name: "newLast",
+            message: "What is the last name of the new employee?",
+            validate: (newLast) => {
+              return newLast
+                ? true
+                : console.log(
+                    "Please input the first name of the new employee."
+                  );
+            },
+          },
+          {
+            type: "list",
+            name: "roleID",
+            message: "What is the role id for the new employee?",
+            choices: roleList,
+          },
+          {
+            type: "list",
+            name: "managerID",
+            message:
+              "What is the new employee's manager's ID? If employee is a manager, select 'NULL'.",
+            choices: managerList,
+          },
+        ])
+        .then((answer) => {
+          const { newFirst, newLast, roleID, managerID } = answer;
+          let newEmployee = `INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES('${newFirst}', '${newLast}', '${roleID}', ${managerID})`;
+          connection.query(newEmployee, (err, res) => {
+            if (err) throw err;
+            new UserViewQuery().viewEmployees();
+          });
+        });
+    });
   }
 }
 
