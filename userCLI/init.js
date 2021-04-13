@@ -44,9 +44,14 @@ class initApp {
           case "Add Department":
             add.addDepartment();
             break;
+          case "Add Role":
+            add.addRole();
+            break;
         }
       });
   }
+
+  answers() {}
 }
 
 module.exports = initApp;
