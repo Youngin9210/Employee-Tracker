@@ -43,40 +43,32 @@ class UserViewQuery {
     tLog(roleData);
   }
 
-  viewManager() {
-    let managers =
+  async viewManager() {
+    const managers =
       "SELECT e.id, e.first_name, e.last_name, r.title AS role, d.name AS dept FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id WHERE e.manager_id IS NULL";
-    let managerList = [];
-    connection.query(managers, (err, res) => {
-      res.forEach(({ id }, i) => {
-        managerList.push(id);
-        i++;
-      });
+    const managerData = await connection.query(managers);
+    const managerList = managerData.map((row) => row.id);
+    console.log("\n================ MANAGERS ================");
+    tLog(managerData);
 
-      console.log("\n================ MANAGERS ================");
-      tLog(res);
-      inquirer
-        .prompt([
-          {
-            type: "list",
-            name: "manager",
-            message:
-              "What is the ID of the manager you like to view? (Reference above)",
-            choices: managerList,
-          },
-        ])
-        .then((answer) => {
-          const { manager } = answer;
+    const runPrompt = await inquirer.prompt([
+      {
+        type: "list",
+        name: "manager",
+        message:
+          "What is the ID of the manager you like to view? (Reference above)",
+        choices: managerList,
+      },
+    ]);
+    const { manager } = runPrompt;
 
-          let employees = `SELECT e.id, e.first_name, e.last_name, r.title AS role, r.salary, d.name AS department FROM employee e JOIN role r	ON e.role_id = r.id JOIN department d ON r.department_id = d.id WHERE e.manager_id = ${manager}`;
-          connection.query(employees, (err, res) => {
-            console.log(
-              "\n================ EMPLOYEES BY MANAGER ================"
-            );
-            tLog(res);
-          });
-        });
-    });
+    const employees = `SELECT e.id, e.first_name, e.last_name, r.title AS role, r.salary, d.name AS department FROM employee e JOIN role r	ON e.role_id = r.id JOIN department d ON r.department_id = d.id WHERE e.manager_id = ${manager}`;
+
+    const employeeData = await connection.query(employees);
+
+    employeeData === ""
+      ? tLog(employeeData)
+      : console.log("This manager does not have any employees yet!");
   }
 }
 
