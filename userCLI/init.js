@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const figlet = require("figlet");
+const connection = require("./assets/connection");
 
 const UserViewQuery = require("./view.js");
 const view = new UserViewQuery();
@@ -49,35 +50,54 @@ class initApp {
           "Update Employee Role",
           "Update Employee Manager",
           "Remove Employee",
+          "Exit",
         ],
       },
     ]);
-    const { toDo } = runPrompt;
-    switch (toDo) {
+
+    const answer = await new AnswerPrompt().answer;
+    answer(runPrompt.toDo);
+  }
+}
+
+class AnswerPrompt {
+  async answer(x) {
+    const prompt = await new initApp().prompt;
+    switch (x) {
       case "View All Employees":
-        view.viewEmployees();
+        const employees = await view.viewEmployees();
+        prompt();
         break;
       case "View All Employees By Department":
-        view.viewDepartment();
+        const byDept = await view.viewByDepartment();
+        prompt();
         break;
       case "View All Employees By Manager":
-        view.viewManager();
+        const byManager = await view.viewByManager();
+        prompt();
         break;
       case "View All Roles":
-        view.viewRoles();
+        const roles = await view.viewRoles();
+        prompt();
         break;
       case "Add Department":
-        add.addDepartment();
+        const addDept = await add.addDepartment();
+        prompt();
         break;
       case "Add Role":
-        add.addRole();
+        const addRole = await add.addRole();
+        prompt();
         break;
       case "Add Employee":
-        add.addEmployee();
+        const addEmployee = await add.addEmployee();
+        prompt();
         break;
       case "Update Employee Role":
-        update.updateRole();
+        const updateRole = await update.updateRole();
+        prompt();
         break;
+      default:
+        connection.end();
     }
   }
 }
