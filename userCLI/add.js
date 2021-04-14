@@ -1,4 +1,6 @@
 const inquirer = require("inquirer");
+const initApp = require("./init.js");
+const app = new initApp();
 const UserViewQuery = require("./view.js");
 const view = new UserViewQuery();
 const LogTable = require("./assets/logTable.js");
@@ -32,53 +34,45 @@ class UserAddQuery {
 
   async addRole() {
     let departments = "SELECT * FROM department";
-    let deptList = [];
 
-    connection.query(departments, (err, res) => {
-      res.forEach(({ id }, i) => {
-        deptList.push(id);
-        i++;
-      });
-      console.log("\n================ DEPARTMENTS ================");
-      tLog(res);
+    console.log("\n================ DEPARTMENTS ================");
+    const deptData = await connection.query(departments);
+    const deptList = deptData.map((row) => row.id);
+    tLog(deptData);
+
+    const runPrompt = await inquirer.prompt([
+      {
+        type: "input",
+        name: "role",
+        message: "What role would you like to add?",
+        validate: (role) => {
+          return role ? true : console.log("Please input a new role.");
+        },
+      },
+      {
+        type: "input",
+        name: "role_salary",
+        message: "What is the salary of the new role?",
+        validate: (role_salary) => {
+          return role_salary ? true : console.log("Please input a salary.");
+        },
+      },
+      {
+        type: "list",
+        name: "dept_id",
+        message:
+          "What department would you like to add this role to? (Reference department table above)",
+        choices: deptList,
+      },
+    ]);
+
+    const { role, role_salary, dept_id } = runPrompt;
+    let newRole = `INSERT INTO role(title, salary, department_id) VALUES('${role}', '${role_salary}', '${dept_id}')`;
+    let selectRoles = "SELECT * FROM role";
+
+    const addRole = await connection.query(newRole, () => {
+      view.viewRoles();
     });
-    console.log(deptList);
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "role",
-          message: "What role would you like to add?",
-          validate: (role) => {
-            return role ? true : console.log("Please input a new role.");
-          },
-        },
-        {
-          type: "input",
-          name: "role_salary",
-          message: "What is the salary of the new role?",
-          validate: (role_salary) => {
-            return role_salary ? true : console.log("Please input a salary.");
-          },
-        },
-        {
-          type: "list",
-          name: "dept_id",
-          message:
-            "What department would you like to add this role to? (Reference department table above)",
-          choices: deptList,
-        },
-      ])
-      .then((answer) => {
-        const { role, role_salary, dept_id } = answer;
-        let newRole = `INSERT INTO role(title, salary, department_id) VALUES('${role}', '${role_salary}', '${dept_id}')`;
-        let selectRoles = "SELECT * FROM role";
-        connection.query(newRole, (err, res) => {
-          connection.query(selectRoles, (err, res) => {
-            tLog(res);
-          });
-        });
-      });
   }
 
   addEmployee() {
