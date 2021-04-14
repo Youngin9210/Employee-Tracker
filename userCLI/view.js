@@ -29,20 +29,18 @@ class UserViewQuery {
     tLog(viewEmployees);
   }
 
-  viewEmployees() {
-    let employees = "SELECT * FROM employee";
-    connection.query(employees, (err, res) => {
-      console.log("\n================ EMPLOYEES ================");
-      tLog(res);
-    });
+  async viewEmployees() {
+    const employees = "SELECT * FROM employee";
+    const employeeData = await connection.query(employees);
+    console.log("\n================ EMPLOYEES ================");
+    tLog(employeeData);
   }
 
-  viewRoles() {
-    let roles = "SELECT * FROM role";
-    connection.query(roles, (err, res) => {
-      console.log("\n================ Roles ================");
-      tLog(res);
-    });
+  async viewRoles() {
+    const roles = "SELECT * FROM role";
+    const roleData = await connection.query(roles);
+    console.log("\n================ ROLES ================");
+    tLog(roleData);
   }
 
   viewManager() {
