@@ -1,63 +1,48 @@
 const inquirer = require("inquirer");
 const UserViewQuery = require("./view.js");
+const view = new UserViewQuery();
 const LogTable = require("./assets/logTable.js");
 const tLog = new LogTable().log;
 
-require("dotenv").config();
-
-const mysql = require("mysql");
-
-const connection = mysql.createConnection({
-  host: process.env.MySQL_HOST,
-
-  // Your port; if not 3306
-  port: process.env.MySQL_PORT,
-
-  // Your username
-  user: process.env.MySQL_USER,
-
-  // Be sure to update with your own MySQL password!
-  password: process.env.MySQL_PASS,
-  database: process.env.MySQL_DB,
-});
+const connection = require("./assets/connection");
 
 class UserAddQuery {
-  addDepartment() {
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "newDepartment",
-          message: "What department would you like to add?",
-          validate: (newDepartment) => {
-            return newDepartment
-              ? true
-              : console.log("Please input a new department.");
-          },
+  async addDepartment() {
+    const runPrompt = await inquirer.prompt([
+      {
+        type: "input",
+        name: "newDepartment",
+        message: "What department would you like to add?",
+        validate: (newDepartment) => {
+          return newDepartment
+            ? true
+            : console.log("Please input a new department.");
         },
-      ])
-      .then((data) => {
-        const { newDepartment } = data;
-        let newDept = `INSERT INTO department(name) VALUES('${newDepartment}')`;
-        let selectDept = "SELECT * FROM department";
-        connection.query(newDept, (err, res) => {
-          connection.query(selectDept, (err, res) => {
-            tLog(res);
-          });
-        });
-      });
+      },
+    ]);
+
+    const { newDepartment } = runPrompt;
+    let newDept = `INSERT INTO department (name) VALUES('${newDepartment}')`;
+    let selectDept = "SELECT * FROM department";
+
+    const addDepartment = await connection.query(newDept);
+    const viewDepartment = await connection.query(selectDept);
+    tLog(viewDepartment);
   }
 
-  addRole() {
+  async addRole() {
     let departments = "SELECT * FROM department";
     let deptList = [];
+
     connection.query(departments, (err, res) => {
       res.forEach(({ id }, i) => {
         deptList.push(id);
         i++;
       });
+      console.log("\n================ DEPARTMENTS ================");
       tLog(res);
     });
+    console.log(deptList);
     inquirer
       .prompt([
         {
