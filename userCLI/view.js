@@ -5,7 +5,7 @@ const tLog = new LogTable().log;
 const connection = require("./assets/connection");
 
 class UserViewQuery {
-  async viewDepartment() {
+  async viewByDepartment() {
     const departments = "SELECT * FROM department";
     const deptData = await connection.query(departments);
     const deptList = deptData.map((row) => row.id);
@@ -43,7 +43,7 @@ class UserViewQuery {
     tLog(roleData);
   }
 
-  async viewManager() {
+  async viewByManager() {
     const managers =
       "SELECT e.id, e.first_name, e.last_name, r.title AS role, d.name AS dept FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id WHERE e.manager_id IS NULL";
     const managerData = await connection.query(managers);
@@ -68,7 +68,7 @@ class UserViewQuery {
 
     employeeData === ""
       ? tLog(employeeData)
-      : console.log("This manager does not have any employees yet!");
+      : console.log("‼️ This manager does not have any employees yet! ‼️");
   }
 }
 
