@@ -22,11 +22,10 @@ class UserDeleteQuery {
     const { dept } = runPrompt;
     const selectedID = deptIDs[deptNames.indexOf(dept)];
     const deleteDept = `DELETE d.*, r.*, e.* FROM department d JOIN role r JOIN employee e WHERE (d.id = ${selectedID} AND r.department_id = ${selectedID}) AND (r.id = e.role_id)`;
-    const removeDept = await connection.query(deleteDept, () => {
-      view.departments();
-      view.roles();
-      view.employees();
-    });
+    const removeDept = await connection.query(deleteDept);
+    const viewDepartment = await view.departments();
+    const viewEmployees = await view.employees();
+    const viewRoles = await view.roles();
   }
 
   async role() {
@@ -47,10 +46,9 @@ class UserDeleteQuery {
     const { role } = runPrompt;
     const selectedRole = roleIDs[roleTitle.indexOf(role)];
     const deleteRole = `DELETE r.*, e.* FROM role r JOIN employee e WHERE (r.id = ${selectedRole} AND e.role_id = ${selectedRole});`;
-    const removeRole = await connection.query(deleteRole, () => {
-      view.roles();
-      view.employees();
-    });
+    const removeRole = await connection.query(deleteRole);
+    const viewRoles = await view.roles();
+    const viewEmployees = await view.employees();
   }
 
   async employee() {
@@ -76,9 +74,9 @@ class UserDeleteQuery {
     const updateEmployees = `UPDATE employee SET manager_id = NULL WHERE manager_id = ${selectedEmployeeID}`;
 
     const removeEmployee = await connection.query(deleteEmployee);
-    const update = await connection.query(updateEmployees, () => {
-      view.employees();
-    });
+    const update = await connection.query(updateEmployees);
+
+    const viewEmployees = await view.employees();
   }
 }
 
