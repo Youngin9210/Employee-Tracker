@@ -6,7 +6,7 @@ const tLog = new LogTable().log;
 const connection = require("./assets/connection");
 
 class UserUpdateQuery {
-  async updateRole() {
+  async role() {
     const employees = "SELECT * FROM employee";
     const roles = "SELECT * FROM role";
     const employeeData = await connection.query(employees);
@@ -17,20 +17,20 @@ class UserUpdateQuery {
 
     const roleData = await connection.query(roles);
     const rIDs = roleData.map((row) => row.id);
+
     const roleTitle = roleData.map((row) => row.title);
 
     const runPrompt = await inquirer.prompt([
       {
         type: "list",
         name: "employeeName",
-        message:
-          "What is the id of the employee that you would like to update?",
+        message: "What employee you would like to update?",
         choices: employeeNames,
       },
       {
         type: "list",
         name: "newRole",
-        message: "What is the id of the employee's new role'?",
+        message: "What is the employee's new role'?",
         choices: roleTitle,
       },
     ]);

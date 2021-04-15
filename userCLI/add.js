@@ -8,7 +8,7 @@ const tLog = new LogTable().log;
 const connection = require("./assets/connection");
 
 class UserAddQuery {
-  async addDepartment() {
+  async department() {
     const runPrompt = await inquirer.prompt([
       {
         type: "input",
@@ -31,14 +31,12 @@ class UserAddQuery {
     tLog(viewDepartment);
   }
 
-  async addRole() {
+  async role() {
     let departments = "SELECT * FROM department";
 
-    console.log("\n================ DEPARTMENTS ================");
     const deptData = await connection.query(departments);
     const deptIDs = deptData.map((row) => row.id);
     const deptNames = deptData.map((row) => row.name);
-    tLog(deptData);
 
     const runPrompt = await inquirer.prompt([
       {
@@ -60,8 +58,7 @@ class UserAddQuery {
       {
         type: "list",
         name: "dept",
-        message:
-          "What department would you like to add this role to? (Reference department table above)",
+        message: "What department would you like to add this role to?",
         choices: deptNames,
       },
     ]);
@@ -70,26 +67,27 @@ class UserAddQuery {
     const newDeptID = deptIDs[deptNames.indexOf(dept)];
     const newRole = `INSERT INTO role(title, salary, department_id) VALUES('${role}', ${role_salary}, ${newDeptID})`;
 
-    connection.query(newRole, () => {
-      view.viewRoles();
+    const addRole = await connection.query(newRole, () => {
+      view.roles();
     });
   }
 
-  async addEmployee() {
+  async employee() {
     const roles = "SELECT * FROM role";
     const managers =
       "SELECT e.id, e.first_name, e.last_name, r.title AS role, d.name AS dept FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON r.department_id = d.id WHERE e.manager_id IS NULL";
 
-    console.log("\n================ Roles ================");
     const roleData = await connection.query(roles);
-    const roleList = roleData.map((row) => row.id);
-    tLog(roleData);
+    const roleIDs = roleData.map((row) => row.id);
+    const roleTitle = roleData.map((row) => row.title);
 
-    console.log("\n================ MANAGERS ================");
     const managerData = await connection.query(managers);
-    const managerList = managerData.map((row) => row.id);
-    managerList.push("NULL");
-    tLog(managerData);
+    const managerIDs = managerData.map((row) => row.id);
+    const managerName = managerData.map(
+      (row) => `${row.first_name} ${row.last_name}`
+    );
+    managerIDs.push("NULL");
+    managerName.push("NULL");
 
     const runPrompt = await inquirer.prompt([
       {
@@ -114,23 +112,26 @@ class UserAddQuery {
       },
       {
         type: "list",
-        name: "roleID",
-        message: "What is the role id for the new employee?",
-        choices: roleList,
+        name: "role",
+        message: "What is the new employee's role?",
+        choices: roleTitle,
       },
       {
         type: "list",
-        name: "managerID",
+        name: "manager",
         message:
-          "What is the new employee's manager's ID? If employee is a manager, select 'NULL'.",
-        choices: managerList,
+          "Who is the manager of the new employee? If employee IS a manager, select 'NULL'.",
+        choices: managerName,
       },
     ]);
-    const { newFirst, newLast, roleID, managerID } = runPrompt;
-    let newEmployee = `INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES('${newFirst}', '${newLast}', '${roleID}', ${managerID})`;
+    const { newFirst, newLast, role, manager } = runPrompt;
+    const employeeRole = roleIDs[roleTitle.indexOf(role)];
+    const employeeManager = managerIDs[managerName.indexOf(manager)];
+
+    const newEmployee = `INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES('${newFirst}', '${newLast}', '${employeeRole}', ${employeeManager})`;
 
     const addEmployee = await connection.query(newEmployee, () => {
-      view.viewEmployees();
+      view.employees();
     });
   }
 }
