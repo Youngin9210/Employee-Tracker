@@ -44,7 +44,7 @@ class UserUpdateQuery {
     const update = await connection.query(updateRoleID);
     const view = await connection.query(viewUpdated);
 
-    console.log("\n================ EMPLOYEES ================");
+    console.log("\n================ EMPLOYEES ================\n");
     tLog(view);
   }
 }

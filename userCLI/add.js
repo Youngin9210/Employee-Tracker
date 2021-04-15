@@ -23,8 +23,8 @@ class UserAddQuery {
     ]);
 
     const { newDepartment } = runPrompt;
-    let newDept = `INSERT INTO department (name) VALUES('${newDepartment}')`;
-    let selectDept = "SELECT * FROM department";
+    const newDept = `INSERT INTO department (name) VALUES('${newDepartment}')`;
+    const selectDept = "SELECT * FROM department";
 
     const addDepartment = await connection.query(newDept);
     const viewDepartment = await connection.query(selectDept);
