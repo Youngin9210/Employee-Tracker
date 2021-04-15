@@ -52,6 +52,34 @@ class UserDeleteQuery {
       view.employees();
     });
   }
+
+  async employee() {
+    const employees = "SELECT * FROM employee";
+    const employeeData = await connection.query(employees);
+    const employeeID = employeeData.map((row) => row.id);
+    const employeeNames = employeeData.map(
+      (row) => `${row.first_name} ${row.last_name}`
+    );
+
+    const runPrompt = await inquirer.prompt([
+      {
+        type: "list",
+        name: "employee",
+        message: "What department would you like to delete?",
+        choices: employeeNames,
+      },
+    ]);
+
+    const { employee } = runPrompt;
+    const selectedEmployeeID = employeeID[employeeNames.indexOf(employee)];
+    const deleteEmployee = `DELETE e.* FROM employee e WHERE e.id = ${selectedEmployeeID};`;
+    const updateEmployees = `UPDATE employee SET manager_id = NULL WHERE manager_id = ${selectedEmployeeID}`;
+
+    const removeEmployee = await connection.query(deleteEmployee);
+    const update = await connection.query(updateEmployees, () => {
+      view.employees();
+    });
+  }
 }
 
 module.exports = UserDeleteQuery;
