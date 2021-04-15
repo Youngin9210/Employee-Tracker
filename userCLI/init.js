@@ -65,35 +65,35 @@ class AnswerPrompt {
     const prompt = await new initApp().prompt;
     switch (x) {
       case "View All Employees":
-        const employees = await view.viewEmployees();
+        const employees = await view.employees();
         prompt();
         break;
       case "View All Employees By Department":
-        const byDept = await view.viewByDepartment();
+        const byDept = await view.byDepartment();
         prompt();
         break;
       case "View All Employees By Manager":
-        const byManager = await view.viewByManager();
+        const byManager = await view.byManager();
         prompt();
         break;
       case "View All Roles":
-        const roles = await view.viewRoles();
+        const roles = await view.roles();
         prompt();
         break;
       case "Add Department":
-        const addDept = await add.addDepartment();
+        const addDept = await add.department();
         prompt();
         break;
       case "Add Role":
-        const addRole = await add.addRole();
+        const addRole = await add.role();
         prompt();
         break;
       case "Add Employee":
-        const addEmployee = await add.addEmployee();
+        const addEmployee = await add.employee();
         prompt();
         break;
       case "Update Employee Role":
-        const updateRole = await update.updateRole();
+        const updateRole = await update.role();
         prompt();
         break;
       default:
