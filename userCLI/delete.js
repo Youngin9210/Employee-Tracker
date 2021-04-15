@@ -28,6 +28,30 @@ class UserDeleteQuery {
       view.employees();
     });
   }
+
+  async role() {
+    const roles = "SELECT * FROM role";
+    const roleData = await connection.query(roles);
+    const roleTitle = roleData.map((row) => row.title);
+    const roleIDs = roleData.map((row) => row.id);
+
+    const runPrompt = await inquirer.prompt([
+      {
+        type: "list",
+        name: "role",
+        message: "What department would you like to delete?",
+        choices: roleTitle,
+      },
+    ]);
+
+    const { role } = runPrompt;
+    const selectedRole = roleIDs[roleTitle.indexOf(role)];
+    const deleteRole = `DELETE r.*, e.* FROM role r JOIN employee e WHERE (r.id = ${selectedRole} AND e.role_id = ${selectedRole});`;
+    const removeRole = await connection.query(deleteRole, () => {
+      view.roles();
+      view.employees();
+    });
+  }
 }
 
 module.exports = UserDeleteQuery;

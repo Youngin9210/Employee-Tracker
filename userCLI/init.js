@@ -54,6 +54,7 @@ class initApp {
           "Update Employee Role",
           "Update Employee Manager",
           "Remove Department",
+          "Remove Role",
           "Exit",
         ],
       },
@@ -106,6 +107,10 @@ class AnswerPrompt {
         break;
       case "Remove Department":
         const removeDept = await remove.department();
+        prompt();
+        break;
+      case "Remove Role":
+        const removeRole = await remove.role();
         prompt();
         break;
       default:
