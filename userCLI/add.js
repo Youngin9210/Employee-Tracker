@@ -67,9 +67,8 @@ class UserAddQuery {
     const newDeptID = deptIDs[deptNames.indexOf(dept)];
     const newRole = `INSERT INTO role(title, salary, department_id) VALUES('${role}', ${role_salary}, ${newDeptID})`;
 
-    const addRole = await connection.query(newRole, () => {
-      view.roles();
-    });
+    const addRole = await connection.query(newRole);
+    const viewRoles = await view.roles();
   }
 
   async employee() {
@@ -130,9 +129,8 @@ class UserAddQuery {
 
     const newEmployee = `INSERT INTO employee(first_name, last_name, role_id, manager_id) VALUES('${newFirst}', '${newLast}', '${employeeRole}', ${employeeManager})`;
 
-    const addEmployee = await connection.query(newEmployee, () => {
-      view.employees();
-    });
+    const addEmployee = await connection.query(newEmployee);
+    const viewEmployees = await view.employees();
   }
 }
 
