@@ -10,18 +10,14 @@ class UserUpdateQuery {
     const employees = "SELECT * FROM employee";
     const roles = "SELECT * FROM role";
     const employeeData = await connection.query(employees);
-    // console.log("\n================ EMPLOYEES ================");
     const employeeNames = employeeData.map(
       (row) => `${row.first_name} ${row.last_name}`
     );
     const eIDs = employeeData.map((row) => row.id);
-    // tLog(employeeData);
 
     const roleData = await connection.query(roles);
-    // console.log("\n================ ROLES ================");
     const rIDs = roleData.map((row) => row.id);
     const roleTitle = roleData.map((row) => row.title);
-    // tLog(roleData);
 
     const runPrompt = await inquirer.prompt([
       {
