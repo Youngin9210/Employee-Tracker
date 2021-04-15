@@ -15,25 +15,16 @@ const UserDeleteQuery = require("./delete.js");
 const remove = new UserDeleteQuery();
 
 class initApp {
-  init() {
-    figlet("Employee", async (err, data) => {
+  async init() {
+    figlet("Employee\nManager", async (err, data) => {
       if (err) {
         console.log("Something went wrong...");
         console.dir(err);
         return;
       }
       console.log(data);
-
-      figlet("Manager", async (err, data) => {
-        if (err) {
-          console.log("Something went wrong...");
-          console.dir(err);
-          return;
-        }
-        console.log(data);
-      });
     });
-    this.prompt();
+    const prompt = await this.prompt();
   }
 
   async prompt() {
