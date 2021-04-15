@@ -11,6 +11,9 @@ const add = new UserAddQuery();
 const UserUpdateQuery = require("./update.js");
 const update = new UserUpdateQuery();
 
+const UserDeleteQuery = require("./delete.js");
+const remove = new UserDeleteQuery();
+
 class initApp {
   init() {
     figlet("Employee", async (err, data) => {
@@ -50,7 +53,7 @@ class initApp {
           "Add Employee",
           "Update Employee Role",
           "Update Employee Manager",
-          "Remove Employee",
+          "Remove Department",
           "Exit",
         ],
       },
@@ -99,6 +102,10 @@ class AnswerPrompt {
         break;
       case "Update Employee Role":
         const updateRole = await update.role();
+        prompt();
+        break;
+      case "Remove Department":
+        const removeDept = await remove.department();
         prompt();
         break;
       default:
