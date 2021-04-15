@@ -36,7 +36,8 @@ class UserAddQuery {
 
     console.log("\n================ DEPARTMENTS ================");
     const deptData = await connection.query(departments);
-    const deptList = deptData.map((row) => row.id);
+    const deptIDs = deptData.map((row) => row.id);
+    const deptNames = deptData.map((row) => row.name);
     tLog(deptData);
 
     const runPrompt = await inquirer.prompt([
@@ -58,15 +59,16 @@ class UserAddQuery {
       },
       {
         type: "list",
-        name: "dept_id",
+        name: "dept",
         message:
           "What department would you like to add this role to? (Reference department table above)",
-        choices: deptList,
+        choices: deptNames,
       },
     ]);
 
-    const { role, role_salary, dept_id } = runPrompt;
-    let newRole = `INSERT INTO role(title, salary, department_id) VALUES('${role}', '${role_salary}', '${dept_id}')`;
+    const { role, role_salary, dept } = runPrompt;
+    const newDeptID = deptIDs[deptNames.indexOf(dept)];
+    const newRole = `INSERT INTO role(title, salary, department_id) VALUES('${role}', ${role_salary}, ${newDeptID})`;
 
     connection.query(newRole, () => {
       view.viewRoles();
