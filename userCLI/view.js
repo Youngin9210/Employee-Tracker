@@ -5,6 +5,27 @@ const tLog = new LogTable().log;
 const connection = require("./assets/connection");
 
 class UserViewQuery {
+  async departments() {
+    const departments = "SELECT * FROM department";
+    const deptData = await connection.query(departments);
+    console.log("\n================ DEPARTMENTS ================\n");
+    tLog(deptData);
+  }
+
+  async employees() {
+    const employees = "SELECT * FROM employee";
+    const employeeData = await connection.query(employees);
+    console.log("\n================ EMPLOYEES ================\n");
+    tLog(employeeData);
+  }
+
+  async roles() {
+    const roles = "SELECT * FROM role";
+    const roleData = await connection.query(roles);
+    console.log("\n================ ROLES ================\n");
+    tLog(roleData);
+  }
+
   async byDepartment() {
     const departments = "SELECT * FROM department";
     const deptData = await connection.query(departments);
@@ -28,20 +49,6 @@ class UserViewQuery {
       "\n================ EMPLOYEES BY DEPARTMENT ================\n"
     );
     tLog(viewEmployees);
-  }
-
-  async employees() {
-    const employees = "SELECT * FROM employee";
-    const employeeData = await connection.query(employees);
-    console.log("\n================ EMPLOYEES ================\n");
-    tLog(employeeData);
-  }
-
-  async roles() {
-    const roles = "SELECT * FROM role";
-    const roleData = await connection.query(roles);
-    console.log("\n================ ROLES ================\n");
-    tLog(roleData);
   }
 
   async byManager() {
