@@ -75,6 +75,15 @@ class UserViewQuery {
       ? console.log("‼️ This manager does not have any employees yet! ‼️")
       : tLog(employeeData);
   }
+
+  async deptBudget() {
+    const budgets =
+      "SELECT d.name as Department, sum(r.salary) as Budget FROM role r JOIN department d ON d.id = r.department_id GROUP BY department_id";
+    const budgetData = await connection.query(budgets);
+
+    console.log("\n================ DEPARTMENT BUDGETS ================\n");
+    tLog(budgetData);
+  }
 }
 
 module.exports = UserViewQuery;

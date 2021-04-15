@@ -44,6 +44,7 @@ class initApp {
           "View All Employees By Department",
           "View All Employees By Manager",
           "View All Roles",
+          "View Department Budgets",
           "Add Department",
           "Add Role",
           "Add Employee",
@@ -74,6 +75,10 @@ class AnswerPrompt {
         break;
       case "View All Employees By Manager":
         const byManager = await view.byManager();
+        prompt();
+        break;
+      case "View Department Budgets":
+        const deptBudget = await view.deptBudget();
         prompt();
         break;
       case "View All Roles":
