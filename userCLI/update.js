@@ -10,41 +10,46 @@ class UserUpdateQuery {
     const employees = "SELECT * FROM employee";
     const roles = "SELECT * FROM role";
     const employeeData = await connection.query(employees);
-    console.log("\n================ EMPLOYEES ================");
-    tLog(employeeData);
-
+    // console.log("\n================ EMPLOYEES ================");
+    const employeeNames = employeeData.map(
+      (row) => `${row.first_name} ${row.last_name}`
+    );
     const eIDs = employeeData.map((row) => row.id);
+    // tLog(employeeData);
+
     const roleData = await connection.query(roles);
-    console.log("\n================ ROLES ================");
+    // console.log("\n================ ROLES ================");
     const rIDs = roleData.map((row) => row.id);
-    tLog(roleData);
+    const roleTitle = roleData.map((row) => row.title);
+    // tLog(roleData);
 
     const runPrompt = await inquirer.prompt([
       {
         type: "list",
-        name: "employeeID",
+        name: "employeeName",
         message:
           "What is the id of the employee that you would like to update?",
-        choices: eIDs,
+        choices: employeeNames,
       },
       {
         type: "list",
-        name: "roleID",
+        name: "newRole",
         message: "What is the id of the employee's new role'?",
-        choices: rIDs,
+        choices: roleTitle,
       },
     ]);
-    const { employeeID, roleID } = runPrompt;
-    let updateRoleID = `UPDATE employee SET role_id = ${roleID} WHERE id = ${employeeID}`;
+    const { employeeName, newRole } = runPrompt;
+    const employeeID = eIDs[employeeNames.indexOf(employeeName)];
+    const newRoleID = rIDs[roleTitle.indexOf(newRole)];
+    const updateRoleID = `UPDATE employee SET role_id = ${newRoleID} WHERE id = ${employeeID}`;
+    const viewUpdated =
+      "SELECT e.id, e.first_name, e.last_name, r.title AS role, e.role_id FROM employee e JOIN role r ON e.role_id = r.id";
 
-    const update = await connection.query(updateRoleID, () => {
-      new UserViewQuery().viewEmployees();
-    });
-    console.log(update);
+    const update = await connection.query(updateRoleID);
+    const view = await connection.query(viewUpdated);
 
-    // connection.query(updateRoleID, (err, res) => {
-    //   new UserViewQuery().viewEmployees();
-    // });
+    console.log("\n================ EMPLOYEES ================");
+    tLog(view);
   }
 }
 
