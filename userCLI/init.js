@@ -108,7 +108,7 @@ class AnswerPrompt {
         prompt();
         break;
       case "Update Employee Role":
-        const updateRole = await update.role();
+        const updateRole = await update.employeeRole();
         prompt();
         break;
       case "Remove Department":
