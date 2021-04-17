@@ -134,4 +134,5 @@ class UserViewQuery {
   }
 }
 
+// exporting UserViewQuery class
 module.exports = UserViewQuery;
