@@ -130,4 +130,5 @@ class AnswerPrompt {
   }
 }
 
+// exporting initApp class
 module.exports = initApp;

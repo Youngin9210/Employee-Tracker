@@ -1,7 +1,5 @@
 // including npm inquirer package
 const inquirer = require("inquirer");
-// including UserViewQuery class constructor
-const UserViewQuery = require("./view.js");
 // including npm console.table package
 const LogTable = require("./assets/logTable.js");
 // new instance of LogTable().log
