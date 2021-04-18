@@ -56,7 +56,6 @@ class initApp {
           "Add Role",
           "Add Employee",
           "Update Employee Role",
-          "Update Employee Manager",
           "Remove Department",
           "Remove Role",
           "Remove Employee",

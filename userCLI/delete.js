@@ -34,9 +34,10 @@ class UserDeleteQuery {
     // determing the ID of the selected department
     const selectedID = deptIDs[deptNames.indexOf(dept)];
     // query to delete selected department and child data
-    const deleteDept = `DELETE d.*, r.*, e.* FROM department d JOIN role r JOIN employee e WHERE (d.id = ${selectedID} AND r.department_id = ${selectedID}) AND (r.id = e.role_id)`;
+    const deleteData = `DELETE e.*, r.*, d.* FROM employee e JOIN role r ON e.role_id = r.id JOIN department d ON d.id = r.department_id where d.id = ${selectedID}`;
+
     // connecting to db to delete department data
-    const removeDept = await connection.query(deleteDept);
+    const removeDept = await connection.query(deleteData);
     // viewing updated table data
     const viewDepartment = await view.departments();
     const viewEmployees = await view.employees();
