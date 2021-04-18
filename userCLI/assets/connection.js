@@ -1,24 +1,28 @@
-require("dotenv").config();
-const util = require("util")
-
-const mysql = require("mysql");
-
+// including npm dotenv package to help hide password and important info
+require('dotenv').config();
+// including node module util
+const util = require('util');
+// including mysql package to interact with db
+const mysql = require('mysql');
+// putting connection requirements into a variable to access later in code
 const connection = mysql.createConnection({
-  host: process.env.MySQL_HOST,
+	// setting host as pre-defined in .env file
+	host: process.env.MySQL_HOST,
 
-  // Your port; if not 3306
-  port: process.env.MySQL_PORT,
+	// setting port as pre-defined in .env file
+	port: process.env.MySQL_PORT,
 
-  // Your username
-  user: process.env.MySQL_USER,
+	// setting user as pre-defined in .env file
+	user: process.env.MySQL_USER,
 
-  // Be sure to update with your own MySQL password!
-  password: process.env.MySQL_PASS,
-  database: process.env.MySQL_DB,
+	// setting password as pre-defined in .env file
+	password: process.env.MySQL_PASS,
+	// setting database as pre-defined in .env file
+	database: process.env.MySQL_DB,
 });
-
+// starting connection when called
 connection.connect();
-
+// promisifying connection
 connection.query = util.promisify(connection.query);
-
+// exporting connection
 module.exports = connection;
